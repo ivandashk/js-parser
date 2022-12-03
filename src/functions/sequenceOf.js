@@ -1,6 +1,5 @@
-const { updateParserError } = require('../helpers/updateParserError.js');
-const { updateParserState } = require('../helpers/updateParserState.js');
 const { Parser } = require('../parser.js');
+const { StateUpdater } = require('../state-updater.js');
 
 module.exports.sequenceOf = parsers => new Parser(parserState => {
     const results = [];
@@ -9,11 +8,11 @@ module.exports.sequenceOf = parsers => new Parser(parserState => {
         newState = parser.stateTransformerFn(newState);
 
         if (newState.isError) {
-            return updateParserError(parserState, newState.error);
+            return StateUpdater.updateError(parserState, newState.error);
         }
 
         results.push(newState.result);
     }
 
-    return updateParserState(parserState, newState.index, results);
+    return StateUpdater.updateSuccess(parserState, newState.index, results);
 });

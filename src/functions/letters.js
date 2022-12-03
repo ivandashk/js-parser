@@ -1,7 +1,6 @@
 const { BaseError } = require('../errors/BaseError.js');
 const { Parser } = require('../parser.js');
-const { updateParserError } = require('../helpers/updateParserError.js');
-const { updateParserState } = require('../helpers/updateParserState.js');
+const { StateUpdater } = require('../state-updater.js');
 
 module.exports.letters = new Parser(parserState => {
     const { source, index } = parserState;
@@ -14,8 +13,8 @@ module.exports.letters = new Parser(parserState => {
     }
 
     if (!res) {
-        return updateParserError(parserState, BaseError.createParseError(`Expecting letters`, index))
+        return StateUpdater.updateError(parserState, BaseError.createParseError(`Expecting letters`, index))
     }
 
-    return updateParserState(parserState, parserState.index + offset, res);
+    return StateUpdater.updateSuccess(parserState, parserState.index + offset, res);
 });

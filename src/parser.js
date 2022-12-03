@@ -1,5 +1,4 @@
-const { updateParserError } = require('./helpers/updateParserError');
-const { updateParserState } = require('./helpers/updateParserState');
+const { StateUpdater } = require('./state-updater.js');
 
 class Parser {
     stateTransformerFn;
@@ -34,19 +33,19 @@ class Parser {
         // the state transformation needed before the map
         const newState = this.stateTransformerFn(parserState);
         
-        if (newState.isError) return updateParserError(parserState, newState.error);
+        if (newState.isError) return StateUpdater.updateError(parserState, newState.error);
         
         const mappedValue = fn(newState.result);
-        return updateParserState(parserState, newState.index, mappedValue)
+        return StateUpdater.updateSuccess(parserState, newState.index, mappedValue)
     })
 
     errorMap = (fn) => new Parser(parserState => {
         const newState = this.stateTransformerFn(parserState);
 
-        if (!newState.isError) return updateParserError(parserState, newState.error);
+        if (!newState.isError) return parserState;
 
         const newText = fn({ error: newState.error, index: newState.index });
-        return updateParserError(parserState, newText);
+        return StateUpdater.updateError(parserState, newText);
     })
 }
 
