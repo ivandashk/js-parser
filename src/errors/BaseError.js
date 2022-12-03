@@ -1,6 +1,7 @@
 class BaseError {
-    static createParseError(text, index) {
-        return `ParseError (position ${index}): ${text}`;
+    static createParseError(text, index, name) {
+        const nameInclusion = name ? `'${name}' ` : '';
+        return `ParseError ${nameInclusion}(position ${index}): ${text}`;
     }
 }
 

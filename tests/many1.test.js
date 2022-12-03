@@ -1,10 +1,10 @@
 import { describe, it, expect } from 'vitest';
 import { execOnBothParsers } from './helpers/execOnBothParsers';
 
-describe('many', () => {
+describe('many1', () => {
     it('many repeats', () => {
         const [arcRes, myRes] = execOnBothParsers((parser) => {
-            return parser.many(parser.str('abc')).run('abcabcabcabc');
+            return parser.many1(parser.str('abc')).run('abcabcabcabc');
         });
 
         expect(myRes).toStrictEqual(arcRes);
@@ -12,7 +12,7 @@ describe('many', () => {
 
     it('empty string', () => {
         const [arcRes, myRes] = execOnBothParsers((parser) => {
-            return parser.many(parser.str('abc')).run('');
+            return parser.many1(parser.str('abc')).run('');
         });
 
         expect(myRes).toStrictEqual(arcRes);
@@ -20,7 +20,7 @@ describe('many', () => {
 
     it('no matches', () => {
         const [arcRes, myRes] = execOnBothParsers((parser) => {
-            return parser.many(parser.str('abc')).run('12345');
+            return parser.many1(parser.str('abc')).run('12345');
         });
 
         expect(myRes).toStrictEqual(arcRes);
