@@ -2,7 +2,7 @@ const { BaseError } = require('../errors/BaseError.js');
 const { StateUpdater } = require('../state-updater.js');
 const { Parser } = require('../parser.js');
 
-module.exports.digits = new Parser((parserState) => {
+module.exports.digits = new Parser(parserState => {
     const { source, index } = parserState;
 
     let res = '';
@@ -13,7 +13,10 @@ module.exports.digits = new Parser((parserState) => {
     }
 
     if (!res) {
-        return StateUpdater.updateError(parserState, BaseError.createParseError(`Expecting digits`, index))
+        return StateUpdater.updateError(
+            parserState,
+            BaseError.createParseError(`Expecting digits`, index)
+        );
     }
 
     return StateUpdater.updateSuccess(parserState, parserState.index + offset, res);

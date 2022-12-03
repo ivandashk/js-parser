@@ -1,13 +1,12 @@
 const { StateUpdater } = require('./state-updater.js');
 
 class Parser {
-    stateTransformerFn;
     constructor(fn) {
         this.stateTransformerFn = fn;
     }
 
     // Collects all the parsers with their first argumants before
-    // Runs last and triggers their transform functions (ast) => { do smth with ast }
+    // Runs last and triggers their transform functions (parserState) => { do smth with the state }
     run = (source) => {
         const initialState = {
             source,
