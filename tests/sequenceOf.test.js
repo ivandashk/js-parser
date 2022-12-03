@@ -15,11 +15,10 @@ describe('sequenceOf', () => {
 
     it('Error in first', () => {
         const [arcRes, myRes] = execOnBothParsers((parser) => {
-            const p = parser.sequenceOf([
+            return parser.sequenceOf([
                 parser.str('hello!'),
                 parser.str('world'),
-            ]);
-            return p.run('helloworld')
+            ]).run('helloworld');
         });
 
         expect(myRes).toStrictEqual(arcRes);
@@ -27,7 +26,7 @@ describe('sequenceOf', () => {
 
     it('Sequence of sequence', () => {
         const [arcRes, myRes] = execOnBothParsers((parser) => {
-            const p = parser.sequenceOf([
+            return parser.sequenceOf([
                 parser.sequenceOf([
                     parser.str('hello'),
                     parser.str('world'),
@@ -36,8 +35,7 @@ describe('sequenceOf', () => {
                     parser.str('hello'),
                     parser.str('world'),
                 ]),
-            ]);
-            return p.run('helloworldhelloworld')
+            ]).run('helloworldhelloworld');
         });
 
         expect(myRes).toStrictEqual(arcRes);

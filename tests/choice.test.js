@@ -9,7 +9,6 @@ describe('choice', () => {
                 parser.letters,
             ]).run('123ads');
         });
-        console.log(arcRes);
 
         expect(myRes).toStrictEqual(arcRes);
     })
@@ -21,7 +20,6 @@ describe('choice', () => {
                 parser.letters,
             ]).run('---123');
         });
-        console.log(arcRes);
 
         expect(myRes).toStrictEqual(arcRes);
     })

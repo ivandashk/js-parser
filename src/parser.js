@@ -41,7 +41,7 @@ class Parser {
     errorMap = (fn) => new Parser(parserState => {
         const newState = this.stateTransformerFn(parserState);
 
-        if (!newState.isError) return parserState;
+        if (!newState.isError) return newState;
 
         const newText = fn({ error: newState.error, index: newState.index });
         return StateUpdater.updateError(parserState, newText);

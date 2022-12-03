@@ -1,28 +1,28 @@
 import { describe, it, expect } from 'vitest';
 import { execOnBothParsers } from './helpers/execOnBothParsers';
 
-describe('str', () => {
-    it('positive', () => {
+describe('many', () => {
+    it('manymathes', () => {
         const [arcRes, myRes] = execOnBothParsers((parser) => {
-            return parser.str('hello').run('hello');
+            return parser.many(parser.str('abc')).run('abcabcabcabc');
+        });
+
+        expect(myRes).toStrictEqual(arcRes);
+    });
+
+    it('empty string', () => {
+        const [arcRes, myRes] = execOnBothParsers((parser) => {
+            return parser.many(parser.str('abc')).run('');
+        });
+
+        expect(myRes).toStrictEqual(arcRes);
+    });
+
+    it('no matches', () => {
+        const [arcRes, myRes] = execOnBothParsers((parser) => {
+            return parser.many(parser.str('abc')).run('12345');
         });
 
         expect(myRes).toStrictEqual(arcRes);
     })
-
-    it('end of input', () => {
-        const [arcRes, myRes] = execOnBothParsers((parser) => {
-            return parser.str('hello').run('he');
-        });
-
-        expect(myRes).toStrictEqual(arcRes);
-    })
-
-    it('wrong string', () => {
-        const [arcRes, myRes] = execOnBothParsers((parser) => {
-            return parser.str('hello').run('qweqweqweqwe');
-        });
-
-        expect(myRes).toStrictEqual(arcRes);
-    })
-})
+});
