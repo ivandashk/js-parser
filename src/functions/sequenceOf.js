@@ -1,19 +1,19 @@
+const { updateParserError } = require('../helpers/updateParserError.js');
+const { updateParserState } = require('../helpers/updateParserState.js');
 const { Parser } = require('../parser.js');
 
-module.exports.sequenceOf = parsers => new Parser((ast) => {
+module.exports.sequenceOf = parsers => new Parser(parserState => {
     const results = [];
+    let newState = parserState;
     for (let parser of parsers) {
-        parser.exec(ast);
+        newState = parser.stateTransformerFn(newState);
 
-        if (ast.isASTError()) {
-            return;
+        if (newState.isError) {
+            return updateParserError(parserState, newState.error);
         }
 
-        results.push(ast.getResult());
+        results.push(newState.result);
     }
 
-    return ast.updateResult({
-        result: results,
-        offset: 0
-    });
+    return updateParserState(parserState, newState.index, results);
 });

@@ -4,11 +4,10 @@ import { execOnBothParsers } from './helpers/execOnBothParsers';
 describe('sequenceOf', () => {
     it('positive', () => {
         const [arcRes, myRes] = execOnBothParsers((parser) => {
-            const p = parser.sequenceOf([
+            return parser.sequenceOf([
                 parser.str('hello'),
                 parser.str('world'),
-            ]);
-            return p.run('helloworld')
+            ]).run('helloworld');
         });
 
         expect(myRes).toStrictEqual(arcRes);

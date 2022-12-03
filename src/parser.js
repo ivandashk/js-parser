@@ -1,4 +1,5 @@
-const { AST } = require('./ast.js');
+const { updateParserError } = require('./helpers/updateParserError');
+const { updateParserState } = require('./helpers/updateParserState');
 
 class Parser {
     stateTransformerFn;
@@ -6,36 +7,46 @@ class Parser {
         this.stateTransformerFn = fn;
     }
 
-    exec = (ast) => {
-        this.stateTransformerFn(ast);
-    }
-
     // Collects all the parsers with their first argumants before
     // Runs last and triggers their transform functions (ast) => { do smth with ast }
     run = (source) => {
-        const ast = new AST(source);
-        this.stateTransformerFn(ast);
-        return ast.get();
+        const initialState = {
+            source,
+            isError: false,
+            result: undefined,
+            error: undefined,
+            index: 0,
+            data: null
+        }
+
+        const res = this.stateTransformerFn(initialState);
+
+        delete res.source;
+        if (res.result === undefined) delete res.result;
+        if (res.error === undefined) delete res.error;
+
+        return res;
     }
 
-    map = (fn) => new Parser(ast => {
-        // You need to call this.stateTransformerFn(ast), because it calls upon a root parser
+    map = (fn) => new Parser(parserState => {
+        // You need to call this.stateTransformerFn(parserState), because it calls upon a root parser
         // Example: In str('hello').map(fn) it allows to call str() and perform
-        // the ast transformation needed before the map
-        this.stateTransformerFn(ast);
-        const mappedValue = fn(ast.getResult());
-
-        if (ast.isASTError()) return;
-
-        ast.updateResult({ result: mappedValue, offset: 0 });
+        // the state transformation needed before the map
+        const newState = this.stateTransformerFn(parserState);
+        
+        if (newState.isError) return updateParserError(parserState, newState.error);
+        
+        const mappedValue = fn(newState.result);
+        return updateParserState(parserState, newState.index, mappedValue)
     })
 
-    errorMap = (fn) => new Parser(ast => {
-        this.stateTransformerFn(ast);
-        if (!ast.isASTError()) return;
+    errorMap = (fn) => new Parser(parserState => {
+        const newState = this.stateTransformerFn(parserState);
 
-        const newText = fn({ error: ast.getError(), index: ast.getIndex()})
-        ast.setError(newText);
+        if (!newState.isError) return updateParserError(parserState, newState.error);
+
+        const newText = fn({ error: newState.error, index: newState.index });
+        return updateParserError(parserState, newText);
     })
 }
 

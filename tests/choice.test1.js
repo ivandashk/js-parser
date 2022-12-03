@@ -7,7 +7,19 @@ describe('choice', () => {
             return parser.choice([
                 parser.digits,
                 parser.letters,
-            ]).run('123-------123');
+            ]).run('123ads');
+        });
+        console.log(arcRes);
+
+        expect(myRes).toStrictEqual(arcRes);
+    })
+
+    it('wrong first chars', () => {
+        const [arcRes, myRes] = execOnBothParsers((parser) => {
+            return parser.choice([
+                parser.digits,
+                parser.letters,
+            ]).run('---123');
         });
         console.log(arcRes);
 

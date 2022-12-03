@@ -2,6 +2,8 @@ const { Parser } = require('../parser.js');
 
 module.exports.choice = parsers => new Parser((ast) => {
     // TODO: Not implemented
+    // Implement immutability to AST first!
+
     // const results = [];
     // for (let parser of parsers) {
     //     parser.exec(ast);

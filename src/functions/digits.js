@@ -1,9 +1,10 @@
 const { BaseError } = require('../errors/BaseError.js');
+const { updateParserError } = require('../helpers/updateParserError.js');
+const { updateParserState } = require('../helpers/updateParserState.js');
 const { Parser } = require('../parser.js');
 
-module.exports.digits = new Parser((ast) => {
-    const source = ast.getSource();
-    const index = ast.getIndex();
+module.exports.digits = new Parser((parserState) => {
+    const { source, index } = parserState;
 
     let res = '';
     let offset = 0;
@@ -13,12 +14,8 @@ module.exports.digits = new Parser((ast) => {
     }
 
     if (!res) {
-        ast.setError(BaseError.createParseError(`Expecting digits`, index));
-        return;
+        return updateParserError(parserState, BaseError.createParseError(`Expecting digits`, index))
     }
 
-    ast.updateResult({
-        result: res,
-        offset
-    })
+    return updateParserState(parserState, parserState.index + offset, res);
 });
