@@ -1,4 +1,4 @@
-const { Parser } = require('./parser.js');
+const { Parser } = require('../parser.js');
 
 module.exports.sequenceOf = parsers => new Parser((ast) => {
     const results = [];

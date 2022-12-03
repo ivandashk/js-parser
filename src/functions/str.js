@@ -1,5 +1,5 @@
-const { BaseError } = require('./errors/BaseError.js');
-const { Parser } = require('./parser.js');
+const { BaseError } = require('../errors/BaseError.js');
+const { Parser } = require('../parser.js');
 
 module.exports.str = targetString => new Parser((ast) => {
     const source = ast.getSource();
